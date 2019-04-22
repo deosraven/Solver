@@ -5,7 +5,9 @@
 (provide taquin-acc-state?)
 ;(provide taquin-heuristic)
 
-; La fonction aquin-make-state prend en entrée une liste de N
+(struct state vector)
+
+; La fonction taquin-make-state prend en entrée une liste de N
 ; listes. La i-ème sous-liste représente la i-ème ligne du taquin, en
 ; commençant à compter depuis le haut. Les nombres sont numérotés à partir de 1
 ; et le trou est symbolisé par le symbole 'x.
