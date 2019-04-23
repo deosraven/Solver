@@ -75,17 +75,17 @@
 (define move-up
   (lambda (st)
     (if (< (state-blank st) (sqrt (vector-length (state-board st)))) #f
-      (vector-copy-swap (state-board st) (- (state-blank st) (sqrt (vector-length (state-board st)))) (state-blank st)))))
+      (state (vector-copy-swap (state-board st) (- (state-blank st) (sqrt (vector-length (state-board st)))) (state-blank st)) (- (state-blank st) (sqrt (vector-length (state-board st))))))))
 
 (define move-right
   (lambda (st)
     (if (equal? (modulo (state-blank st) (sqrt (vector-length (state-board st)))) (- (sqrt (vector-length (state-board st))) 1)) #f
-      (vector-copy-swap (state-board st) (state-blank st) (+ (state-blank st) 1)))))
+      (state (vector-copy-swap (state-board st) (state-blank st) (+ (state-blank st) 1)) (+ (state-blank st) 1)))))
 
 (define move-down
   (lambda (st)
     (if (>= (state-blank st) (- (vector-length (state-board st)) (sqrt (vector-length (state-board st))))) #f
-      (vector-copy-swap (state-board st) (state-blank st) (+ (state-blank st) (sqrt (vector-length (state-board st))))))))
+      (state (vector-copy-swap (state-board st) (state-blank st) (+ (state-blank st) (sqrt (vector-length (state-board st))))) (+ (state-blank st) (sqrt (vector-length (state-board st))))))))
 
 ; (let* ((v (list->vector '(1 2 3 4 x 5 6 7 8))) (c (vector-copy v))) (vector-swap c 2 5) c)
 
