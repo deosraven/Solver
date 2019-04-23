@@ -3,7 +3,7 @@
 (provide taquin-make-state)
 (provide taquin-adj-states)
 (provide taquin-acc-state?)
-;(provide taquin-heuristic)
+(provide taquin-heuristic)
 
 (struct state vector)
 
