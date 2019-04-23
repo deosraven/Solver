@@ -5,6 +5,7 @@
 (provide taquin-acc-state?)
 ;(provide taquin-heuristic)
 
+; Etats du taquin comprenant un vecteur représentant le board et l'index de la case vide dans ce vecteur 
 (struct state (board blank))
 
 ; La fonction taquin-make-state prend en entrée une liste de N
@@ -13,6 +14,7 @@
 ; et le trou est symbolisé par le symbole 'x.
 ; La fonction renvoie la représentation de l'état correspondant.
 ; Peut probablement être optimisé pour passer de O(2n) à O(n) en faisant flatten + find-blank en une opération
+; Prog défensive ?
 (define taquin-make-state
   (lambda (lls)
     (let ((flat (flatten lls)))
@@ -36,8 +38,24 @@
 ; renvoie une liste de paire pointées, dont le car est le symbole menant
 ; à l'état représenté par le cdr.
 (define taquin-adj-states
-  (lambda (state)
-    'TODO))
+  (lambda (st)
+    (append null
+      (list (let ((left (move-left st))) 
+        (if left 
+          (cons 'l left)
+          null))) 
+      (list (let ((up (move-up st))) 
+        (if up 
+          (cons 'u up) 
+          null))) 
+      (list (let ((right (move-right st))) 
+        (if right
+          (cons 'r right) 
+          null))) 
+      (list (let ((down (move-down st))) 
+        (if down 
+          (cons 'd down) 
+          null))))))
 
 ; (taquin-acc-state? state) renvoie vrai si et seulement si `state` est la
 ; représentation de l'état accepteur
@@ -69,9 +87,6 @@
                                  (state-blank st))
                (- (state-blank st) 1)))))
 
-; > (move-left (taquin-make-state '((1 2 3) (4 x 5) (6 7 8))))
-; '#(1 2 3 x 4 5 6 7 8)
-
 (define move-up
   (lambda (st)
     (if (< (state-blank st) (sqrt (vector-length (state-board st)))) #f
@@ -87,8 +102,6 @@
     (if (>= (state-blank st) (- (vector-length (state-board st)) (sqrt (vector-length (state-board st))))) #f
       (state (vector-copy-swap (state-board st) (state-blank st) (+ (state-blank st) (sqrt (vector-length (state-board st))))) (+ (state-blank st) (sqrt (vector-length (state-board st))))))))
 
-; (let* ((v (list->vector '(1 2 3 4 x 5 6 7 8))) (c (vector-copy v))) (vector-swap c 2 5) c)
-
 (define vector-copy-swap
   (lambda (v pos1 pos2)
     (let ((copy (vector-copy v)))
@@ -99,12 +112,3 @@
   (lambda (v pos1 pos2)
     (let ((temp (vector-ref v pos1)))
       (vector-set*! v pos1 (vector-ref v pos2) pos2 temp))))
-
-; > (let ((v (list->vector '(1 2 3 4 x 5 6 7 8)))) (cons (vector-copy-swap v 2 5) v))
-; '(#(1 2 5 4 x 3 6 7 8) . #(1 2 3 4 x 5 6 7 8))
-
-; Ce que j'ai actuellement :
-; > (let ((x (taquin-make-state '((1 2 3) (4 x 5) (6 7 8))))) (state-board x))
-; '#(1 2 3 4 x 5 6 7 8)
-; > (let ((x (taquin-make-state '((1 2 3) (4 x 5) (6 7 8))))) (state-blank x))
-; 4
