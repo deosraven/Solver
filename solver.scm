@@ -24,6 +24,7 @@
                              (rp-solve-acc (cdr queue) adj acc-state?)))
             (rp-solve-acc (append (cdr queue)
                                   (map (lambda (pair) (node (cdr pair) current (car pair)))
+                                       ; Filter out cyclic states
                                        (filter-map (lambda (pair) (and (not (is-cyclic-state current (cdr pair))) pair))
                                                    (adj (node-state current)))))
                           adj
@@ -58,12 +59,15 @@
             (lambda () (cons (build-solution current)
                              (rp-solve-heuristic-acc queue adj acc-state? heuristic)))
             (begin
+              ; Add every new node with an acyclic state to the priority queue
               (map (lambda (pair)
                      (priority-insert! queue
                                        (node (cdr pair) current (car pair))
                                        (heuristic (cdr pair))))
                    (filter-map (lambda (pair) (and (not (is-cyclic-state current (cdr pair))) pair))
                                (adj (node-state current))))
+
+              ; Recursive call with the completed priority queue
               (rp-solve-heuristic-acc queue
                                       adj
                                       acc-state?
