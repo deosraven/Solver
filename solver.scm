@@ -2,7 +2,7 @@
 
 (require data/heap)
 
-;un node du graphe de recherce composé d'un état, de son node parent et de la direction prise pour l'atteinde, null pour l'état initial.
+;un node du graphe de recherce composé d'un état, de son node parent et du symbole permettant d'atteinde cet état par la fonction de transition (#f pour l'état initial).
 (struct node (state parent symbol))
 
 (provide rp-solve)
@@ -30,10 +30,10 @@
                           adj
                           acc-state?)))))
 
-(define (is-cyclic-state parent state)
+(define (is-cyclic-state parent st)
   (cond [(not parent) #f]
-        [(equal? (node-state parent) state) #t]
-        [else (is-cyclic-state (node-parent parent) state)]))
+        [(equal? (node-state parent) st) #t]
+        [else (is-cyclic-state (node-parent parent) st)]))
 
 (define (build-solution node)
   (if (not (node-parent node)) '()
